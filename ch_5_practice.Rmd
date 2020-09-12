@@ -1,0 +1,16 @@
+---
+title: "Chapter 5 Practice"
+author: "Micah Elias"
+date: "9/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r cars}
+summary(cars)
+```
