@@ -7,10 +7,149 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+Downloads 
+```{r}
+install.packages("nycflights13")
 ```
 
 
-
+5.1 Prerequisites 
 ```{r cars}
-summary(cars)
+library("nycflights13")
+library("tidyverse")
 ```
+
+5.1.2 nycflights13
+```{r}
+?nycflights13
+flights
+view(flights)
+```
+
+5.2 dplyr basics 
+
+```{r}
+#dplyr functions wont change structure of the input, unless saves at variable
+filter(flights, month == 1, day ==1)
+jan1 <- filter(flights, month ==1, day ==1)
+
+# wrapping a variable creation command in () will print results 
+(dec25 <- filter(flights, month == 12, day == 25))
+```
+
+5.2.1 Comparisons 
+```{r}
+## == is needed to be equal (not =)
+filter(flights, month == 1)
+```
+
+Logical Operators 
+```{r}
+#boolean operation, each criteria needs its own T/ F statement
+filter(flights, month == 11 | month == 12)
+
+# shorthand x%in% y
+nov_dec <- filter(flights, month %in% c(11,12))
+nov_dec
+
+# so, !x | !y is the same as !(x&y)
+
+#these two are the same 
+filter(flights, !(arr_delay > 120 | dep_delay > 120))
+filter(flights, arr_delay <= 12, dep_delay <= 120)
+
+```
+
+
+5.2.4 Exercises 
+1.1. flights that had an arrival delay of two or more hours 
+```{r}
+filter(flights, arr_delay >= 60)
+```
+
+1.2. flew to houston 
+```{r}
+filter(flights, dest == "IAH" | dest == "HOU")
+```
+
+1.3. operated by american, united, delta 
+```{r}
+filter(flights, carrier == "UA" | carrier == "AA" | carrier == "DL")
+
+```
+
+1.4. departed in summer
+```{r}
+filter(flights, month == 7 | month == 8 | month == 9)
+```
+
+1.5. arrived more than 2 hours late but didnt leave late 
+```{r}
+filter(flights, arr_delay >= 120 & dep_delay <= 0)
+```
+
+1.7 between midnight and 6am 
+```{r}
+filter(flights, dep_time >= 1 & dep_time <= 600)
+```
+
+2. the between() command 
+```{r}
+?between
+filter(flights, between(dep_time, 1, 600))
+```
+
+3. missing dep_time
+```{r}
+filter(flights, dep_time == NA)
+```
+
+5.3 Arange Rows
+```{r}
+arrange(flights, year, month, day)
+arrange(flights, desc(dep_delay))
+```
+
+5.3.1 Exercises
+1 arrange to sort 
+```{r}
+arrange(flights, desc(dep_time == is.na(TRUE)))
+```
+
+2. most delayed 
+```{r}
+arrange(flights, desc(dep_delay))
+arrange(flights, dep_time)
+```
+
+5.5 Mutate 
+```{r}
+flights_sml <- 
+  select(flights, 
+        year:day,
+        ends_with("delay"),
+        distance,
+        air_time
+        )
+
+mutate(flights_sml,
+       gain = dep_delay - arr_delay, 
+       speed = distance / air_time * 60,
+       hours = air_time / 60,
+       gain_per_hour = gain / hours
+       )
+
+
+```
+
+Only keep new variable
+```{r}
+transmute(flights, 
+          gain = dep_delay - arr_delay,
+          hours = air_time / 60,
+          gain_per_hour = gain/ hours)
+```
+
