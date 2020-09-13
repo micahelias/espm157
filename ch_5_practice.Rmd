@@ -153,3 +153,11 @@ transmute(flights,
           gain_per_hour = gain/ hours)
 ```
 
+5.5.2 Exercises 
+```{r}
+mutate(flights, 
+       time_from_midnight = dep_time)
+?flights
+
+```
+
